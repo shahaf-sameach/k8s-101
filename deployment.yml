@@ -1,0 +1,47 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: k8s-demo
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: k8s-demo
+    spec:
+      containers:
+        - name: k8s-demo
+          image: 'shahaf255/k8s-demo:v5'
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /api/healthCheck
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 1
+          livenessProbe:
+            httpGet:
+              path: /api/healthCheck
+              port: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: k8s-demo-service
+  labels:
+    name: k8s-demo-service
+spec:
+  ports:
+    - port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app: k8s-demo
+  type: LoadBalancer
