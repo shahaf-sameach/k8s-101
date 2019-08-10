@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: k8s-demo
-          image: 'shahaf255/k8s-demo:v5'
+          image: 'shahaf255/k8s-demo:0.0.2-SNAPSHOT'
           ports:
             - containerPort: 8080
           readinessProbe:
